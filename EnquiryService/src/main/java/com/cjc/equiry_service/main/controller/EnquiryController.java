@@ -5,23 +5,34 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.cjc.equiry_service.main.model.EnquiryDetails;
 import com.cjc.equiry_service.main.service.EnquiryService;
+
 @RequestMapping("/enquiry")
 @RestController
 public class EnquiryController {
+	
+	@Autowired private EnquiryService enquiryService;
+	
+	@PostMapping("/save-enquiry")
+	public ResponseEntity<EnquiryDetails> onSaveEnquiry(@RequestBody EnquiryDetails enquiryDetails)
+	{
+		EnquiryDetails enquiryDetailsRef=enquiryService.saveEnquiry(enquiryDetails);
 
-	@Autowired private EnquiryService es;
+	   return new ResponseEntity<EnquiryDetails>(enquiryDetailsRef, HttpStatus.CREATED);
+	}
+
+
 	
 	@PutMapping("/edit-enquiry/{enquiryId}")
 	public ResponseEntity<EnquiryDetails> onEditEnquiry(@PathVariable int enquiryId,
 			                                 @RequestBody EnquiryDetails enquiry)
 	{
-		EnquiryDetails enquiryRef=   es.updateEnquiry(enquiryId,enquiry);
+		EnquiryDetails enquiryRef=   enquiryService.updateEnquiry(enquiryId,enquiry);
 		return new ResponseEntity<EnquiryDetails>(enquiryRef, HttpStatus.OK);
 	}
 	
